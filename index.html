@@ -5,6 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Agent</title>
+
+    <link
+      rel="alternate"
+      href="http://foo.com"
+      id="desktop"
+      media="only screen and (touch-enabled: 0)"
+    />
+    <link
+      rel="alternate"
+      href="http://m.foo.com"
+      id="phone"
+      media="only screen and (max-device-width: 640px)"
+    />
+    <link
+      rel="alternate"
+      href="http://tablet.foo.com"
+      id="tablet"
+      media="only screen and (min-device-width: 641px)"
+    />
   </head>
   <body>
     <section id="navigator">
