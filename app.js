@@ -8,6 +8,7 @@ const getPlatformDetails = () => {
     browser: platform.name,
     os: platform.os.toString(),
     description: platform.toString(),
+    product: platform.product
   }
 }
 
@@ -16,11 +17,13 @@ const setPlatformDetails = () => {
     browser: platformBrowser,
     os: platformOs,
     description: platformDescription,
+    product: platformProduct
   } = getPlatformDetails()
 
   $('.platform__browser').text(platformBrowser)
   $('.platform__os').text(platformOs)
   $('.platform__description').text(platformDescription)
+  $('.platform__product').text(platformProduct)
 }
 
 const setNavigatorDetails = () => {
