@@ -6,11 +6,25 @@ $(document).ready(() => {
   setFinalValues()
 })
 
+function iOS() {
+  return [
+    'iPad Simulator',
+    'iPhone Simulator',
+    'iPod Simulator',
+    'iPad',
+    'iPhone',
+    'iPod',
+  ].includes(navigator.platform)
+  // iPad on iOS 13 detection  || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+}
+
 const setFinalValues = () => {
-  const device = deviceDetect()
+  const ua = window.navigator.userAgent
+  let device = bowser.parse(ua).platform.type
+
+  if (!ua.includes('iPhone') && iOS()) device = 'Tablet'
 
   // +++ browser detection start +++
-  const ua = window.navigator.userAgent
   let browser = ''
 
   browser = bowser.parse(window.navigator.userAgent).browser.name
