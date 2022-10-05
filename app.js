@@ -28,10 +28,9 @@ const setFinalValues = () => {
   if (
     device === 'Tablet' &&
     ua.includes('Mac') &&
-    (browser === 'Safari' || browser === 'Firefox')
+    ['Safari', 'Firefox'].includes(browser)
   )
     os = 'iOS'
-
   // +++ OS detection end +++
 
   $('.final_device').text(device)
