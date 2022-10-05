@@ -20,18 +20,21 @@ function iOS() {
 
 const setFinalValues = () => {
   const ua = window.navigator.userAgent
-  let device = bowser.parse(ua).platform.type
+  const bowserParsed = bowser.parse(ua)
 
+  // +++ device detection start +++
+  let device = bowserParsed.platform.type
+
+  // Handle case for iPad
   if (
     !ua.includes('iPhone') &&
-    (iOS() || (navigator.userAgent.includes('Mac') && 'ontouchend' in document))
+    (iOS() || (ua.includes('Mac') && 'ontouchend' in document))
   )
     device = 'Tablet'
+  // +++ device detection end +++
 
   // +++ browser detection start +++
-  let browser = ''
-
-  browser = bowser.parse(window.navigator.userAgent).browser.name
+  let browser = bowserParsed.browser.name
 
   // handle case for firefox on iPad showing safari as browser
   if (browser === 'Safari' && device === 'Tablet' && ua.includes('13'))
@@ -39,7 +42,7 @@ const setFinalValues = () => {
   // +++ browser detection end +++
 
   // +++ OS detection start +++
-  let os = bowser.parse(window.navigator.userAgent).os.name
+  let os = bowserParsed.os.name
 
   // handle case for Chrome on iPad showing "iOS" as os
   // make the os same as firebox and safari (Mac OS X)
