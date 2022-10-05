@@ -53,6 +53,7 @@ const setBrowser = () => {
   $('.browser__name').text(details.browser.name)
   $('.browser__os').text(details.os.name)
   $('.browser__os__version').text(details.os.version)
+  $('.browser__os__version__name').text(details.os.versionName)
   $('.browser__device').text(details.platform.type)
 }
 
