@@ -48,9 +48,12 @@ const setDevice = () => {
 }
 
 const setBrowser = () => {
-  const browser = bowser.getParser(window.navigator.userAgent)
+  const details = bowser.parse(window.navigator.userAgent)
 
-  $('.browser__').text(browser.getBrowserName())
+  $('.browser__name').text(details.browser.name)
+  $('.browser__os').text(details.os.name)
+  $('.browser__os__version').text(details.os.version)
+  $('.browser__device').text(details.platform.type)
 }
 
 const getBrowserMetaData = () => {
