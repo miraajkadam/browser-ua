@@ -2,19 +2,24 @@ $(document).ready(() => {
   setPlatformDetails()
   setNavigatorDetails()
   setDevice()
-  setBrowser()
+  setBowserDetails()
+  setFinalValues()
 })
 
-const getPlatformDetails = () => {
-  return {
-    browser: platform.name,
-    os: platform.os.toString(),
-    description: platform.toString(),
-    product: platform.product,
-  }
+const setFinalValues = () => {
+  
 }
 
 const setPlatformDetails = () => {
+  const getPlatformDetails = () => {
+    return {
+      browser: platform.name,
+      os: platform.os.toString(),
+      description: platform.toString(),
+      product: platform.product,
+    }
+  }
+
   const {
     browser: platformBrowser,
     os: platformOs,
@@ -42,12 +47,72 @@ const setNavigatorDetails = () => {
 }
 
 const setDevice = () => {
-  const { Device } = getBrowserMetaData()
+  const deviceDetect = () => {
+    var agent = window.navigator.userAgent
+    var d = document
+    var e = d.documentElement
+    var g = d.getElementsByTagName('body')[0]
+    var deviceWidth = window.innerWidth || e.clientWidth || g.clientWidth
+
+    // Chrome
+    IsChromeApp = window.chrome && chrome.app && chrome.app.runtime
+
+    // iPhone
+    IsIPhone = agent.match(/iPhone/i) != null
+
+    // iPad up to IOS12
+    IsIPad =
+      agent.match(/iPad/i) != null ||
+      (agent.match(/iPhone/i) != null && deviceWidth > 750) // iPadPro when run with no launch screen can have error in userAgent reporting as an iPhone rather than an iPad. iPadPro width portrait 768, iPhone6 plus 414x736 but would probably always report 414 on app startup
+
+    if (IsIPad) IsIPhone = false
+
+    // iPad from IOS13
+    var macApp = agent.match(/Macintosh/i) != null
+    if (macApp) {
+      // need to distinguish between Macbook and iPad
+      var canvas = document.createElement('canvas')
+      if (canvas != null) {
+        var context =
+          canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
+        if (context) {
+          var info = context.getExtension('WEBGL_debug_renderer_info')
+          if (info) {
+            var renderer = context.getParameter(info.UNMASKED_RENDERER_WEBGL)
+            if (renderer.indexOf('Apple') != -1) IsIPad = true
+          }
+        }
+      }
+    }
+    // IOS
+    IsIOSApp = IsIPad || IsIPhone
+
+    // Android
+    IsAndroid = agent.match(/Android/i) != null
+    IsAndroidPhone = IsAndroid && deviceWidth <= 960
+    IsAndroidTablet = IsAndroid && !IsAndroidPhone
+
+    let device = ''
+
+    if (IsAndroidTablet || IsIPad) device = 'Tablet'
+    else if (IsIPhone || IsAndroidPhone) device = 'Mobile'
+    else device = 'Desktop'
+
+    // return {
+    //   message: message,
+
+    //   isTrue: IsIOSApp || IsAndroid || IsAndroidTablet || IsAndroidPhone,
+    // }
+
+    return device
+  }
+
+  const Device = deviceDetect()
 
   $('.device__').text(Device)
 }
 
-const setBrowser = () => {
+const setBowserDetails = () => {
   const details = bowser.parse(window.navigator.userAgent)
 
   $('.browser__name').text(details.browser.name)
@@ -58,6 +123,57 @@ const setBrowser = () => {
 }
 
 const getBrowserMetaData = () => {
+  const GetDeviceType = () => {
+    if (device.ios()) {
+      if (device.ipad()) {
+        return 'ios ipad tablet'
+      } else if (device.iphone()) {
+        return 'ios iphone mobile'
+      } else if (device.ipod()) {
+        return 'ios ipod mobile'
+      }
+    } else if (device.android()) {
+      if (device.androidTablet()) {
+        return 'android tablet'
+      } else {
+        return 'android mobile'
+      }
+    } else if (device.blackberry()) {
+      if (device.blackberryTablet()) {
+        return 'blackberry tablet'
+      } else {
+        return 'blackberry mobile'
+      }
+    } else if (device.windows()) {
+      if (device.windowsTablet()) {
+        return 'windows tablet'
+      } else if (device.windowsPhone()) {
+        return 'windows mobile'
+      } else {
+        return 'desktop'
+      }
+    } else if (device.fxos()) {
+      if (device.fxosTablet()) {
+        return 'fxos tablet'
+      } else {
+        return 'fxos mobile'
+      }
+    } else if (device.meego()) {
+      return 'meego mobile'
+    } else if (device.nodeWebkit()) {
+      return 'node-webkit'
+    } else if (device.television()) {
+      return 'television'
+    } else if (device.desktop()) {
+      return 'desktop'
+    }
+
+    if (device.cordova()) {
+      return 'cordova'
+    }
+    return ''
+  }
+
   var unknown = '-'
 
   // screen
@@ -241,131 +357,10 @@ const getBrowserMetaData = () => {
     OsVersion: osVersion,
     Cookies: cookieEnabled,
     FlashVersion: flashVersion,
-    Device: deviceDetect(),
+    Device: GetDeviceType(),
     ClientFingerPrint: '',
     ua: nAgt,
   }
 
   return browserSpecification
-}
-
-const deviceDetect = () => {
-  var agent = window.navigator.userAgent
-  var d = document
-  var e = d.documentElement
-  var g = d.getElementsByTagName('body')[0]
-  var deviceWidth = window.innerWidth || e.clientWidth || g.clientWidth
-
-  // Chrome
-  IsChromeApp = window.chrome && chrome.app && chrome.app.runtime
-
-  // iPhone
-  IsIPhone = agent.match(/iPhone/i) != null
-
-  // iPad up to IOS12
-  IsIPad =
-    agent.match(/iPad/i) != null ||
-    (agent.match(/iPhone/i) != null && deviceWidth > 750) // iPadPro when run with no launch screen can have error in userAgent reporting as an iPhone rather than an iPad. iPadPro width portrait 768, iPhone6 plus 414x736 but would probably always report 414 on app startup
-
-  if (IsIPad) IsIPhone = false
-
-  // iPad from IOS13
-  var macApp = agent.match(/Macintosh/i) != null
-  if (macApp) {
-    // need to distinguish between Macbook and iPad
-    var canvas = document.createElement('canvas')
-    if (canvas != null) {
-      var context =
-        canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
-      if (context) {
-        var info = context.getExtension('WEBGL_debug_renderer_info')
-        if (info) {
-          var renderer = context.getParameter(info.UNMASKED_RENDERER_WEBGL)
-          if (renderer.indexOf('Apple') != -1) IsIPad = true
-        }
-      }
-    }
-  }
-  // IOS
-  IsIOSApp = IsIPad || IsIPhone
-
-  // Android
-  IsAndroid = agent.match(/Android/i) != null
-  IsAndroidPhone = IsAndroid && deviceWidth <= 960
-  IsAndroidTablet = IsAndroid && !IsAndroidPhone
-
-  let device = ''
-
-  if (IsAndroidTablet || IsIPad) device = 'Tablet'
-  else if (IsIPhone || IsAndroidPhone) device = 'Mobile'
-  else device = 'Desktop'
-
-  // return {
-  //   message: message,
-
-  //   isTrue: IsIOSApp || IsAndroid || IsAndroidTablet || IsAndroidPhone,
-  // }
-
-  return device
-}
-
-const GetDeviceCategory = () => {
-  var deviceType = GetDeviceType()
-  //console.log(deviceType);
-  if (deviceType.indexOf('mobile') !== -1) return 'Mobile'
-  if (deviceType.indexOf('tablet') !== -1) return 'Tablet'
-  if (deviceType.indexOf('desktop') !== -1) return 'Desktop'
-
-  return 'Others'
-}
-
-const GetDeviceType = () => {
-  if (device.ios()) {
-    if (device.ipad()) {
-      return 'ios ipad tablet'
-    } else if (device.iphone()) {
-      return 'ios iphone mobile'
-    } else if (device.ipod()) {
-      return 'ios ipod mobile'
-    }
-  } else if (device.android()) {
-    if (device.androidTablet()) {
-      return 'android tablet'
-    } else {
-      return 'android mobile'
-    }
-  } else if (device.blackberry()) {
-    if (device.blackberryTablet()) {
-      return 'blackberry tablet'
-    } else {
-      return 'blackberry mobile'
-    }
-  } else if (device.windows()) {
-    if (device.windowsTablet()) {
-      return 'windows tablet'
-    } else if (device.windowsPhone()) {
-      return 'windows mobile'
-    } else {
-      return 'desktop'
-    }
-  } else if (device.fxos()) {
-    if (device.fxosTablet()) {
-      return 'fxos tablet'
-    } else {
-      return 'fxos mobile'
-    }
-  } else if (device.meego()) {
-    return 'meego mobile'
-  } else if (device.nodeWebkit()) {
-    return 'node-webkit'
-  } else if (device.television()) {
-    return 'television'
-  } else if (device.desktop()) {
-    return 'desktop'
-  }
-
-  if (device.cordova()) {
-    return 'cordova'
-  }
-  return ''
 }
