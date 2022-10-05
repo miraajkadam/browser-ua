@@ -22,7 +22,11 @@ const setFinalValues = () => {
   const ua = window.navigator.userAgent
   let device = bowser.parse(ua).platform.type
 
-  if (!ua.includes('iPhone') && iOS()) device = 'Tablet'
+  if (
+    !ua.includes('iPhone') &&
+    (iOS() || (navigator.userAgent.includes('Mac') && 'ontouchend' in document))
+  )
+    device = 'Tablet'
 
   // +++ browser detection start +++
   let browser = ''
