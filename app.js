@@ -1,6 +1,7 @@
 $(document).ready(() => {
   setPlatformDetails()
   setNavigatorDetails()
+  setDevice()
 })
 
 const getPlatformDetails = () => {
@@ -8,7 +9,7 @@ const getPlatformDetails = () => {
     browser: platform.name,
     os: platform.os.toString(),
     description: platform.toString(),
-    product: platform.product
+    product: platform.product,
   }
 }
 
@@ -17,7 +18,7 @@ const setPlatformDetails = () => {
     browser: platformBrowser,
     os: platformOs,
     description: platformDescription,
-    product: platformProduct
+    product: platformProduct,
   } = getPlatformDetails()
 
   $('.platform__browser').text(platformBrowser)
@@ -37,6 +38,12 @@ const setNavigatorDetails = () => {
   $('.navigator__device').text(Device)
   $('.navigator__platform').text(ua)
   $('.navigator__ua').text(ua)
+}
+
+const setDevice = () => {
+  const { Device } = getBrowserMetaData()
+
+  $('.device__').text(Device)
 }
 
 const getBrowserMetaData = () => {
@@ -223,12 +230,72 @@ const getBrowserMetaData = () => {
     OsVersion: osVersion,
     Cookies: cookieEnabled,
     FlashVersion: flashVersion,
-    Device: GetDeviceCategory(),
+    Device: deviceDetect(),
     ClientFingerPrint: '',
     ua: nAgt,
   }
 
   return browserSpecification
+}
+
+const deviceDetect = () => {
+  var agent = window.navigator.userAgent
+  var d = document
+  var e = d.documentElement
+  var g = d.getElementsByTagName('body')[0]
+  var deviceWidth = window.innerWidth || e.clientWidth || g.clientWidth
+
+  // Chrome
+  IsChromeApp = window.chrome && chrome.app && chrome.app.runtime
+
+  // iPhone
+  IsIPhone = agent.match(/iPhone/i) != null
+
+  // iPad up to IOS12
+  IsIPad =
+    agent.match(/iPad/i) != null ||
+    (agent.match(/iPhone/i) != null && deviceWidth > 750) // iPadPro when run with no launch screen can have error in userAgent reporting as an iPhone rather than an iPad. iPadPro width portrait 768, iPhone6 plus 414x736 but would probably always report 414 on app startup
+
+  if (IsIPad) IsIPhone = false
+
+  // iPad from IOS13
+  var macApp = agent.match(/Macintosh/i) != null
+  if (macApp) {
+    // need to distinguish between Macbook and iPad
+    var canvas = document.createElement('canvas')
+    if (canvas != null) {
+      var context =
+        canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
+      if (context) {
+        var info = context.getExtension('WEBGL_debug_renderer_info')
+        if (info) {
+          var renderer = context.getParameter(info.UNMASKED_RENDERER_WEBGL)
+          if (renderer.indexOf('Apple') != -1) IsIPad = true
+        }
+      }
+    }
+  }
+  // IOS
+  IsIOSApp = IsIPad || IsIPhone
+
+  // Android
+  IsAndroid = agent.match(/Android/i) != null
+  IsAndroidPhone = IsAndroid && deviceWidth <= 960
+  IsAndroidTablet = IsAndroid && !IsAndroidPhone
+
+  let device = ''
+
+  if (IsAndroidTablet || IsIPad) device = 'Tablet'
+  else if (IsIPhone || IsAndroidPhone) device = 'Mobile'
+  else device = 'Desktop'
+
+  // return {
+  //   message: message,
+
+  //   isTrue: IsIOSApp || IsAndroid || IsAndroidTablet || IsAndroidPhone,
+  // }
+
+  return device
 }
 
 const GetDeviceCategory = () => {
