@@ -2,6 +2,7 @@ $(document).ready(() => {
   setPlatformDetails()
   setNavigatorDetails()
   setDevice()
+  setBrowser()
 })
 
 const getPlatformDetails = () => {
@@ -44,6 +45,12 @@ const setDevice = () => {
   const { Device } = getBrowserMetaData()
 
   $('.device__').text(Device)
+}
+
+const setBrowser = () => {
+  const browser = bowser.getParser(window.navigator.userAgent)
+
+  $('.browser__').text(browser.getBrowserName())
 }
 
 const getBrowserMetaData = () => {
