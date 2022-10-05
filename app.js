@@ -18,16 +18,19 @@ const setFinalValues = () => {
   // handle case for firefox on iPad showing safari as browser
   if (browser === 'Safari' && device === 'Tablet' && ua.includes('13'))
     browser = 'Firefox'
-
   // +++ browser detection end +++
 
   // +++ OS detection start +++
-
   let os = bowser.parse(window.navigator.userAgent).os.name
 
   // handle case for Chrome on iPad showing "iOS" as os
   // make the os same as firebox and safari (Mac OS X)
-  if (ua.includes('iPad') && browser === 'Chrome') os = 'Mac OS X'
+  if (
+    device === 'Tablet' &&
+    ua.includes('Mac') &&
+    (browser === 'Safari' || browser === 'Firefox')
+  )
+    os = 'iOS'
 
   // +++ OS detection end +++
 
