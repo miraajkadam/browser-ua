@@ -36,7 +36,7 @@ const setFinalValues = () => {
 
   // handle case for Mozilla on Android showing device = mobile
   // device in case of mozilla on all devices was found to be correct so resolve value from deviceDetect() method 
-  if (browser === "Mozilla" && device === "mobile") device = deviceDetect()
+  if (browser === "Firefox" && device === "mobile") device = deviceDetect()
   // +++ device detection end +++
 
   // +++ browser detection start +++
