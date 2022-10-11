@@ -24,6 +24,8 @@ const setFinalValues = () => {
 
   // +++ device detection start +++
   let device = bowserParsed.platform.type
+  let browser = bowserParsed.browser.name
+  let os = bowserParsed.os.name
 
   // Handle case for iPad
   if (
@@ -31,19 +33,19 @@ const setFinalValues = () => {
     (iOS() || (ua.includes('Mac') && 'ontouchend' in document))
   )
     device = 'Tablet'
+
+  // handle case for Mozilla on Android showing device = mobile
+  // device in case of mozilla on all devices was found to be correct so resolve value from deviceDetect() method 
+  if (browser === "Mozilla" && device === "mobile") device = deviceDetect()
   // +++ device detection end +++
 
   // +++ browser detection start +++
-  let browser = bowserParsed.browser.name
-
   // handle case for firefox on iPad showing safari as browser
   if (browser === 'Safari' && device === 'Tablet' && ua.includes('13'))
     browser = 'Firefox'
   // +++ browser detection end +++
 
   // +++ OS detection start +++
-  let os = bowserParsed.os.name
-
   // handle case for Chrome on iPad showing "iOS" as os
   // make the os same as firebox and safari (Mac OS X)
   if (
