@@ -23,7 +23,7 @@ const setHWA = () => {
   $('.hwa_height').text(screen.height)
   $('.hwa_width').text(screen.width)
   $('.hwa_area').text(screen.height * screen.width)
-  $('.hwa_orientation').text(screen.orientation)
+  $('.hwa_orientation').text(screen.orientation.type)
 }
 
 const setFinalValues = () => {
