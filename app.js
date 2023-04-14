@@ -398,7 +398,7 @@ const deviceDetect = () => {
 
   // Android
   IsAndroid = agent.match(/Android/i) != null
-  IsAndroidPhone = IsAndroid && deviceWidth <= 750
+  IsAndroidPhone = IsAndroid && deviceWidth <= 780
   IsAndroidTablet = IsAndroid && !IsAndroidPhone
 
   let device = ''
