@@ -361,7 +361,7 @@ const deviceDetect = () => {
   var d = document
   var e = d.documentElement
   var g = d.getElementsByTagName('body')[0]
-  var deviceWidth = window.innerWidth || e.clientWidth || g.clientWidth
+  var deviceWidth = screen.width ||window.innerWidth || e.clientWidth || g.clientWidth
 
   // Chrome
   IsChromeApp = window.chrome && chrome.app && chrome.app.runtime
