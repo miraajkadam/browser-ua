@@ -3,6 +3,7 @@ $(document).ready(() => {
   setNavigatorDetails()
   setDevice()
   setBowserDetails()
+  setHWA()
   setFinalValues()
 })
 
@@ -16,6 +17,13 @@ function iOS() {
     'iPod',
   ].includes(navigator.platform)
   // iPad on iOS 13 detection  || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+}
+
+const setHWA = () => {
+  $('.hwa_height').text(screen.height)
+  $('.hwa_width').text(screen.width)
+  $('.hwa_area').text(screen.height * screen.width)
+  $('.hwa_orientation').text(screen.orientation)
 }
 
 const setFinalValues = () => {
