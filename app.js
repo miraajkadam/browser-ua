@@ -332,7 +332,11 @@ const getBrowserMetaData = () => {
 
     case 'iOS':
       osVersion = /OS (\d+)_(\d+)_?(\d+)?/.exec(nVer)
-      osVersion = osVersion[1] + '.' + osVersion[2] + '.' + (osVersion[3] | 0)
+      if (osVersion)
+        osVersion = osVersion[1] + '.' + osVersion[2] + '.' + (osVersion[3] | 0)
+      else 
+        osVersion = ''
+      
       break
   }
 
