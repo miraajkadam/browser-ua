@@ -52,7 +52,7 @@ const setFinalValues = () => {
 
   // +++ browser detection start +++
   // handle case for firefox on iPad showing safari as browser
-  if (browser === 'Safari' && device === 'Tablet' && ua.includes('13'))
+  if (browser === 'Safari' && device === 'Tablet' && ua.includes('15'))
     browser = 'Firefox'
   // +++ browser detection end +++
 
