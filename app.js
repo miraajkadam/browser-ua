@@ -23,7 +23,10 @@ const setHWA = () => {
   $('.hwa_height').text(screen.height)
   $('.hwa_width').text(screen.width)
   $('.hwa_area').text(screen.height * screen.width)
-  $('.hwa_orientation').text(screen.orientation.type)
+
+  const orientation = screen?.orientation?.type || "Unable to detect"
+
+  $('.hwa_orientation').text(orientation)
 }
 
 const setFinalValues = () => {
